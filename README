@@ -1,0 +1,38 @@
+chdb implements a read-only memory mapped hash-table for PHP.
+
+In PHP the only way to define large amounts of constants - for instance to store
+the association between language and text keys and the corresponding translation
+- is to use lots of defines, class consts, or create some humongous array
+structure.
+
+Even with an op-code cacher like APC or e-accelerator, defining constants this
+way is both CPU and memory consuming, as each instance of php will need to
+load/parse/execute the opcodes to define the constants for each request.
+
+chdb is a solution for this problem because:
+ - It takes virtually no time to load initially.
+ - Only the pages of the file which are actually used are read from the disk.
+ - Once a page is loaded it is shared across all the processes in the same
+   machine and cached across multiple requests.
+
+All these functionalities are provided by the operative system itself as
+features of memory mapped files. chdb thus provides to PHP something similar to
+what the data section provides to lower level programming languages like C.
+
+If you are using PHP in a typical setup for a big website which remains stable
+between releases you might benefit from the chdb extension. In that case you
+would create a disk file containing a hashmap of key-value pairs at deploy-time,
+and then map it into the memory of each php process at run-time.
+
+An example of use of chdb for this would be to run the following at deploy-time:
+  $data = array(
+        'key1' => 'value1',
+        'key2' => 'value2',
+        // ...
+  );
+  chdb_create('data.chdb', $data);
+
+Then at run-time, the keys stored in the file can be read by:
+  $chdb = new chdb('data.chdb');
+  $value1 = $chdb->get('key1');
+  $value2 = $chdb->get('key2');

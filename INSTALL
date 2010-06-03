@@ -1,0 +1,13 @@
+To build and install chdb you need cmph 0.9 (http://cmph.sourceforge.net/). Once
+cmph is installed, you can build chdb by running:
+  phpize --with-chdb
+  ./configure
+  make
+
+And finally you can install it by:
+  make install
+
+The configuration script tries to detect the location of cmph automatically.
+Should that fail, you can manually specify the prefix directory in which it's
+installed by running:
+  phpize --with-chdb --with-libcmph-dir=DIR
