@@ -1,14 +1,14 @@
 PHP_ARG_WITH(chdb, whether to enable chdb support,
-[ --with-chdb              Include chdb support])
+[  --with-chdb              Include chdb support])
 
 PHP_ARG_WITH(libcmph-dir, for chdb,
-[ --with-libcmph-dir[=DIR] Set the path to libcmph install prefix.], yes)
+[  --with-libcmph-dir[=DIR] Set the path to libcmph install prefix.], yes)
 
 if test "$PHP_CHDB" != "no"; then
   SEARCH_PATH="/usr/local /usr"
   SEARCH_FOR="/include/cmph.h"
-  if test -r $PHP_LIBCMPH-DIR/$SEARCH_FOR; then
-    CMPH_DIR=$PHP_LIBCMPH-DIR
+  if test -r $PHP_LIBCMPH_DIR/$SEARCH_FOR; then
+    CMPH_DIR=$PHP_LIBCMPH_DIR
   else
     AC_MSG_CHECKING([for cmph files in default path])
     for i in $SEARCH_PATH ; do
