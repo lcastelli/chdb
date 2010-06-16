@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<package version="2.0" xmlns="http://pear.php.net/dtd/package-2.0"
+  xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+  <name>chdb</name>
+  <channel>pecl.php.net</channel>
+  <summary>A fast database for constant data with memory sharing across processes</summary>
+  <description>CHDB (constant hash database) is a fast key-value database for constant data,
+realized by using a memory-mapped file and thus providing the following
+functionalities:
+ - Extremely fast initial load, regardless of the size of the database.
+ - Only the pages of the file which are actually used are loaded from the disk.
+ - Once a page is loaded it is shared across multiple processes.
+ - Loaded pages are cached across multiple request and even process recycling.
+A typical use of CHDB is as a faster alternative to defining many PHP
+constants.
+CHDB is internally implemented as a hash-table using a perfect hashing function,
+thus guaranteeing worst case O(1) lookup time.</description>
+  <lead>
+    <name>Lorenzo Castelli</name>
+    <user>lcastelli</user>
+    <email>lcastelli@gmail.com</email>
+    <active>yes</active>
+  </lead>
+  <date>2010-06-16</date>
+  <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+  </version>
+  <stability>
+    <release>beta</release>
+    <api>beta</api>
+  </stability>
+  <license filesource="LICENSE">BSD</license>
+  <notes>Initial PECL release.</notes>
+  <contents>
+    <dir name="/">
+      <file name="chdb.c" role="src"/>
+      <file name="chdb.h" role="src"/>
+      <file name="config.m4" role="src"/>
+      <file name="INSTALL" role="doc"/>
+      <file name="LICENSE" role="doc"/>
+      <file name="php_chdb.c" role="src"/>
+      <file name="php_chdb.h" role="src"/>
+      <file name="README" role="doc"/>
+    </dir>
+  </contents>
+  <dependencies>
+    <required>
+      <php>
+        <min>5.0.0</min>
+      </php>
+      <pearinstaller>
+        <min>1.4.8</min>
+      </pearinstaller>
+      <os>
+        <name>unix</name>
+      </os>
+    </required>
+  </dependencies>
+  <providesextension>chdb</providesextension>
+  <extsrcrelease>
+    <configureoption name="with-chdb" prompt="enable chdb support?" default="yes"/>
+    <configureoption name="with-libcmph-dir" prompt="cmph installation path?" default="autodetect"/>
+  </extsrcrelease>
+</package>
