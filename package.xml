@@ -15,7 +15,7 @@ functionalities:
  - Extremely fast initial load, regardless of the size of the database.
  - Only the pages of the file which are actually used are loaded from the disk.
  - Once a page is loaded it is shared across multiple processes.
- - Loaded pages are cached across multiple request and even process recycling.
+ - Loaded pages are cached across multiple requests and even process recycling.
 A typical use of CHDB is as a faster alternative to defining many PHP
 constants.
 CHDB is internally implemented as a hash-table using a perfect hashing function,
