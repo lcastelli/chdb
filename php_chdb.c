@@ -25,35 +25,6 @@ static void throw_except_errno(char *format, char *arg, int _errno TSRMLS_DC)
 }
 
 
-ZEND_BEGIN_MODULE_GLOBALS(php_chdb)
-	HashTable chdb_list;
-ZEND_END_MODULE_GLOBALS(php_chdb)
-
-ZEND_DECLARE_MODULE_GLOBALS(php_chdb)
-
-#ifdef ZTS
-# define CHDB_G(v) TSRMG(php_chdb_globals_id, zend_php_chdb_globals *, v)
-#else
-# define CHDB_G(v) (php_chdb_globals.v)
-#endif
-
-static void php_chdb_destroy_list_entry(chdb_t **entry)
-{
-	chdb_close(*entry);
-}
-
-static void php_chdb_init_globals(zend_php_chdb_globals *globals TSRMLS_DC)
-{
-	zend_hash_init(&globals->chdb_list, 16, NULL,
-	               (dtor_func_t)php_chdb_destroy_list_entry, 1);
-}
-
-static void php_chdb_destroy_globals(zend_php_chdb_globals *globals TSRMLS_DC)
-{
-	zend_hash_destroy(&globals->chdb_list);
-}
-
-
 #define KEY_BUFFER_LEN 21
 struct php_chdb_reader_private {
 	HashTable *data;
@@ -164,6 +135,8 @@ struct php_chdb {
 static void php_chdb_free_storage(struct php_chdb *intern TSRMLS_DC)
 {
 	zend_object_std_dtor(&intern->zo TSRMLS_CC);
+	if (intern->chdb)
+		chdb_close(intern->chdb);
 	efree(intern);
 }
 
@@ -174,6 +147,7 @@ static zend_object_value php_chdb_new(zend_class_entry *ce TSRMLS_DC)
 	zval *tmp;
 
 	intern = ecalloc(1, sizeof(*intern));
+	intern->chdb = NULL;
 	zend_object_std_init(&intern->zo, ce TSRMLS_CC);
 	zend_hash_copy(intern->zo.properties, &ce->default_properties,
 	         (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
@@ -207,21 +181,13 @@ static PHP_METHOD(chdb, __construct)
 		RETURN_FALSE;
 	}
 
-	pathname_hash = zend_get_hash_value(pathname, pathname_len);
-	if (zend_hash_quick_find(&CHDB_G(chdb_list), pathname, pathname_len,
-	                         pathname_hash, (void **)&lookup) == SUCCESS) {
-		intern->chdb = *lookup;
-	} else {
-		if ((chdb = chdb_open(pathname)) == NULL) {
-			throw_except_errno("Cannot load '%s': %s", pathname,
-			                   errno TSRMLS_CC);
-			RETURN_FALSE;
-		}
-
-		zend_hash_quick_add(&CHDB_G(chdb_list), pathname, pathname_len,
-		                    pathname_hash, &chdb, sizeof(chdb), NULL);
-		intern->chdb = chdb;
+	if ((chdb = chdb_open(pathname)) == NULL) {
+		throw_except_errno("Cannot load '%s': %s", pathname,
+		                   errno TSRMLS_CC);
+		RETURN_FALSE;
 	}
+
+	intern->chdb = chdb;
 }
 
 ZEND_BEGIN_ARG_INFO_EX(php_chdb_arginfo_get, 0, 0, 1)
@@ -266,26 +232,6 @@ static PHP_MINIT_FUNCTION(chdb)
 	php_chdb_ce = zend_register_internal_class(&ce TSRMLS_CC);
 	php_chdb_ce->create_object = php_chdb_new;
 
-#ifdef ZTS
-	ts_allocate_id(&php_chdb_globals_id,
-	               sizeof(zend_php_chdb_globals),
-	               (ts_allocate_ctor)php_chdb_init_globals,
-	               (ts_allocate_dtor)php_chdb_destroy_globals);
-#else
-	php_chdb_init_globals(&php_chdb_globals TSRMLS_CC);
-#endif
-
-	return SUCCESS;
-}
-
-static PHP_MSHUTDOWN_FUNCTION(chdb)
-{
-#ifdef ZTS
-	ts_free_id(php_chdb_globals_id);
-#else
-	php_chdb_destroy_globals(&php_chdb_globals TSRMLS_CC);
-#endif
-
 	return SUCCESS;
 }
 
@@ -304,7 +250,7 @@ zend_module_entry chdb_module_entry = {
 	"chdb",
 	php_chdb_functions,
 	PHP_MINIT(chdb),
-	PHP_MSHUTDOWN(chdb),
+	NULL,
 	NULL,	
 	NULL,
 	PHP_MINFO(chdb),
