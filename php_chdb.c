@@ -84,7 +84,7 @@ static void php_chdb_reader_next(struct chdb_reader *reader,
 
 	/* convert the value to string */
 	zend_hash_get_current_data_ex(private->data, (void **)&cur, &private->pos);
-	zval_dtor(&private->val_copy); // delete the last copy
+	zval_dtor(&private->val_copy); /* delete the last copy */
 	private->val_copy = **cur;
 	zval_copy_ctor(&private->val_copy);
 	INIT_PZVAL(&private->val_copy);
