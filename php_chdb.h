@@ -23,7 +23,7 @@
 
 #include <php.h>
 
-#define PHP_CHDB_VERSION "0.1.0"
+#define PHP_CHDB_VERSION "0.2.0"
 
 extern zend_module_entry chdb_module_entry;
 #define phpext_chdb_ptr &chdb_module_entry
