@@ -6,6 +6,7 @@
 
 #include <php_ini.h>
 #include <ext/standard/info.h>
+#include <Zend/zend_exceptions.h>
 #include <stdio.h>
 #include <string.h>
 #include "chdb.h"
@@ -39,14 +40,15 @@ static void php_chdb_reader_next(struct chdb_reader *reader,
 {
 	char *my_key;
 	uint my_key_len;
-	long idx;
+	ulong idx;
 	zval **cur;
 	struct php_chdb_reader_private *private = reader->private;
 
 	if (zend_hash_get_current_key_ex(private->data, &my_key, &my_key_len,
 	                        &idx, 0, &private->pos) == HASH_KEY_IS_LONG) {
 		/* convert the key to string */
-		my_key_len = snprintf(private->key_buffer, KEY_BUFFER_LEN, "%ld", idx);
+		my_key_len = snprintf(private->key_buffer, KEY_BUFFER_LEN,
+		                      "%ld", idx);
 		my_key = private->key_buffer;
 	} else {
 		/* ignore NULL string terminator */
@@ -54,7 +56,8 @@ static void php_chdb_reader_next(struct chdb_reader *reader,
 	}
 
 	/* convert the value to string */
-	zend_hash_get_current_data_ex(private->data, (void **)&cur, &private->pos);
+	zend_hash_get_current_data_ex(private->data,
+	                              (void **)&cur, &private->pos);
 	zval_dtor(&private->val_copy); /* delete the last copy */
 	private->val_copy = **cur;
 	zval_copy_ctor(&private->val_copy);
@@ -168,8 +171,7 @@ static PHP_METHOD(chdb, __construct)
 {
 	char *pathname;
 	uint pathname_len;
-	ulong pathname_hash;
-	chdb_t *chdb, **lookup;
+	chdb_t *chdb;
 	zval *object = getThis();
 	struct php_chdb *intern = (struct php_chdb *)
 	                 zend_object_store_get_object(object TSRMLS_CC);

@@ -38,6 +38,6 @@ if test "$PHP_CHDB" != "no"; then
   PHP_SUBST(CHDB_SHARED_LIBADD)
 
   AC_C_BIGENDIAN()
-  PHP_NEW_EXTENSION(chdb, chdb.c php_chdb.c, $ext_shared)
+  PHP_NEW_EXTENSION(chdb, chdb.c php_chdb.c, $ext_shared, , "-Wall")
 fi
 

@@ -127,13 +127,13 @@ static int chdb_read_header(int fd, uint64_t *file_size)
 chdb_t *chdb_open(const char* pathname)
 {
 	int fd, _errno = 0;
-	uint64_t size;
+	uint64_t size = 0;
 	chdb_t *chdb = NULL;
 
 	if ((fd = open(pathname, O_RDONLY)) < 0)
 		return NULL; /* errno is already set */
 
-	if (_errno = chdb_read_header(fd, &size))
+	if ((_errno = chdb_read_header(fd, &size)))
 		goto close_fd;
 
 	if ((chdb = mmap(NULL, (size_t)size, PROT_READ, MAP_SHARED, fd, 0))
@@ -322,7 +322,7 @@ int chdb_create(struct chdb_reader *reader, const char *pathname)
 	cmph_t *mph;
 	FILE *out;
 
-	if (_errno = chdb_generate_hash(reader, &mph))
+	if ((_errno = chdb_generate_hash(reader, &mph)))
 		goto return_error;
 
 	if ((out = fopen(pathname, "w")) == NULL) {
