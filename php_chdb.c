@@ -1,3 +1,7 @@
+// Include these first to ensure that we get the POSIX strerror_r
+#include <stdio.h>
+#include <string.h>
+
 #include "php_chdb.h"
 
 #ifdef ZTS
@@ -7,8 +11,6 @@
 #include <php_ini.h>
 #include <ext/standard/info.h>
 #include <Zend/zend_exceptions.h>
-#include <stdio.h>
-#include <string.h>
 #include "chdb.h"
 
 #ifdef COMPILE_DL_CHDB
