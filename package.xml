@@ -26,17 +26,18 @@ thus guaranteeing worst case O(1) lookup time.</description>
     <email>lcastelli@gmail.com</email>
     <active>yes</active>
   </lead>
-  <date>2011-03-10</date>
+  <date>2011-03-19</date>
   <version>
-    <release>1.0.0</release>
-    <api>1.0.0</api>
+    <release>1.0.1</release>
+    <api>1.0.1</api>
   </version>
   <stability>
     <release>stable</release>
     <api>stable</api>
   </stability>
   <license filesource="LICENSE">BSD</license>
-  <notes>Bump version number to reflect stable state.</notes>
+  <notes>- Fix bug #22600: possible crash when throwing an exception on 64-bit systems.
+- Fix decoding of error messages in some cases.</notes>
   <contents>
     <dir name="/">
       <file name="chdb.c" role="src"/>
@@ -68,6 +69,19 @@ thus guaranteeing worst case O(1) lookup time.</description>
     <configureoption name="with-libcmph-dir" prompt="cmph installation path?" default="autodetect"/>
   </extsrcrelease>
   <changelog>
+    <release>
+      <version>
+        <release>1.0.1</release>
+        <api>1.0.1</api>
+      </version>
+      <stability>
+        <release>stable</release>
+        <api>stable</api>
+      </stability>
+      <date>2011-03-10</date>
+      <notes>- Fix bug #22600: possible crash when throwing an exception on 64-bit systems.
+- Fix decoding of error messages in some cases.</notes>
+    </release>
     <release>
       <version>
         <release>1.0.0</release>
