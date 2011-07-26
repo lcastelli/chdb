@@ -11,6 +11,7 @@
 #include <php_ini.h>
 #include <ext/standard/info.h>
 #include <Zend/zend_exceptions.h>
+#include <ext/spl/spl_exceptions.h>
 #include "chdb.h"
 
 #ifdef COMPILE_DL_CHDB
@@ -23,7 +24,7 @@ static void throw_except_errno(char *format, char *arg, int _errno TSRMLS_DC)
 	char buf[0x100];
 	if (strerror_r(_errno, buf, 0x100))
 		sprintf(buf, "Undefined error %d", _errno);
-	zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C),
+	zend_throw_exception_ex(spl_ce_RuntimeException,
 	                        _errno TSRMLS_CC, format, arg, buf);
 }
 
