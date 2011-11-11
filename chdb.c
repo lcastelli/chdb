@@ -219,8 +219,8 @@ static int chdb_generate_hash(struct chdb_reader *reader, cmph_t **mph)
 		.rewind = chdb_adapter_rewind
 	};
 
-	/* cmph hangs in case of 0 keys, so just return an error here */
-	if (adapter.nkeys == 0)
+	/* cmph hangs in case of 0 keys and fails with 1 key */
+	if (adapter.nkeys <= 1)
 		return EINVAL;
 
 	if ((config = cmph_config_new(&adapter)) == NULL)
