@@ -26,18 +26,19 @@ thus guaranteeing worst case O(1) lookup time.</description>
     <email>lcastelli@gmail.com</email>
     <active>yes</active>
   </lead>
-  <date>2011-03-19</date>
+  <date>2012-04-18</date>
   <version>
-    <release>1.0.1</release>
-    <api>1.0.1</api>
+    <release>1.0.2</release>
+    <api>1.0.2</api>
   </version>
   <stability>
     <release>stable</release>
     <api>stable</api>
   </stability>
   <license filesource="LICENSE">BSD</license>
-  <notes>- Fix bug #22600: possible crash when throwing an exception on 64-bit systems.
-- Fix decoding of error messages in some cases.</notes>
+  <notes>- Fix compilation for PHP 5.4 (thanks to Sebastian Volland).
+- Use RuntimeException instead of Exception for runtime errors.
+- Generate slightly better error in case of input size of 1.</notes>
   <contents>
     <dir name="/">
       <file name="chdb.c" role="src"/>
@@ -69,6 +70,20 @@ thus guaranteeing worst case O(1) lookup time.</description>
     <configureoption name="with-libcmph-dir" prompt="cmph installation path?" default="autodetect"/>
   </extsrcrelease>
   <changelog>
+    <release>
+      <version>
+        <release>1.0.2</release>
+        <api>1.0.2</api>
+      </version>
+      <stability>
+        <release>stable</release>
+        <api>stable</api>
+      </stability>
+      <date>2012-04-18</date>
+      <notes>- Fix compilation for PHP 5.4 (thanks to Sebastian Volland).
+- Use RuntimeException instead of Exception for runtime errors.
+- Generate slightly better error in case of input size of 1.</notes>
+    </release>
     <release>
       <version>
         <release>1.0.1</release>
