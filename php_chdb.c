@@ -155,8 +155,12 @@ static zend_object_value php_chdb_new(zend_class_entry *ce TSRMLS_DC)
 	intern = ecalloc(1, sizeof(*intern));
 	intern->chdb = NULL;
 	zend_object_std_init(&intern->zo, ce TSRMLS_CC);
+#if PHP_VERSION_ID < 50399
 	zend_hash_copy(intern->zo.properties, &ce->default_properties,
 	         (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
+#else
+	object_properties_init(&(intern->zo), ce);
+#endif
 
 	retval.handle = zend_objects_store_put(intern, NULL,
 	          (zend_objects_free_object_storage_t)php_chdb_free_storage,
